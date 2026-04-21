@@ -1,0 +1,423 @@
+@import 'tailwindcss';
+
+@custom-variant light (&:where(.light, .light *));
+
+/* ───────────────────────────────────────────────
+   FONTS
+   ─────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Glysa';
+  src: url('./assets/fonts/Glysa.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend Deca';
+  src: url('./assets/fonts/LexendDeca-VariableFont_wght.ttf')
+    format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ───────────────────────────────────────────────
+   DESIGN TOKENS  (Tailwind v4 @theme)
+   Grey scale:  G100 (darkest) → G10 (lightest)
+   Light scale: L100 (lightest) → L10 (darkest)
+   Shade rules from Figma:
+     • Foreground = bg + 20 shade  (G100 → G80)
+     • Button     = bg + 40 shade  (G100 → G60)
+     • Btn state  = btn + 10 shade (G60 → G50 → G40)
+   ─────────────────────────────────────────────── */
+
+@theme {
+  /* Grey scale */
+  --color-g100: #141414;
+  --color-g90: #191919;
+  --color-g80: #1e1e1e;
+  --color-g70: #232323;
+  --color-g60: #282828;
+  --color-g50: #2d2d2d;
+  --color-g40: #323232;
+  --color-g30: #373737;
+  --color-g20: #3c3c3c;
+  --color-g10: #414141;
+
+  /* Light mode grey scale (inverted) */
+  --color-l100: #ffffff;
+  --color-l90: #f5f5f5;
+  --color-l80: #ebebeb;
+  --color-l70: #e0e0e0;
+  --color-l60: #d6d6d6;
+  --color-l50: #cccccc;
+  --color-l40: #c2c2c2;
+  --color-l30: #b8b8b8;
+  --color-l20: #adadad;
+  --color-l10: #a3a3a3;
+
+  /* Semantic colors */
+  --color-error: #cf6679;
+  --color-error-bg: rgba(207, 102, 121, 0.15);
+
+  /* Font families */
+  --font-heading: 'Glysa', serif;
+  --font-body: 'Lexend Deca', sans-serif;
+
+  /* Font sizes (used by Tailwind's text-* utilities) */
+  --text-h1: 2rem;
+  --text-h1--line-height: 3rem;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 2.5rem;
+  --text-h3: 1rem;
+  --text-h3--line-height: 1.5rem;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.25rem;
+  --text-message: 0.75rem;
+  --text-message--line-height: 1rem;
+}
+
+/* ───────────────────────────────────────────────
+   SEMANTIC VARIABLES  (theme-aware)
+   Dark mode = default, light mode = .light class
+   ─────────────────────────────────────────────── */
+
+:root {
+  /* Surface colors (dark mode default) */
+  --surface-page: var(--color-g100);
+  --surface-card: var(--color-g100);
+  --surface-input: var(--color-g80);
+  --surface-input-active: var(--color-g60);
+  --surface-elevated: var(--color-g80);
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+
+  /* Border colors */
+  --border-default: var(--color-g60);
+  --border-hover: var(--color-g30);
+  --border-active: var(--color-g10);
+
+  /* Text colors (opacity-based per Figma) */
+  --text-primary: rgba(255, 255, 255, 1);
+  --text-secondary: rgba(255, 255, 255, 0.56);
+  --text-disabled: rgba(255, 255, 255, 0.32);
+
+  /* Button colors (bg + 40 shade, states + 10 shade) */
+  --btn-primary: var(--color-g60);
+  --btn-primary-hover: var(--color-g50);
+  --btn-primary-pressed: var(--color-g40);
+  --btn-secondary: transparent;
+  --btn-secondary-hover: var(--color-g90);
+  --btn-secondary-pressed: var(--color-g80);
+
+  color-scheme: dark;
+}
+
+.light {
+  --surface-page: var(--color-l100);
+  --surface-card: var(--color-l100);
+  --surface-input: var(--color-l80);
+  --surface-input-active: var(--color-l60);
+  --surface-elevated: var(--color-l80);
+  --surface-overlay: rgba(0, 0, 0, 0.4);
+
+  --border-default: var(--color-l60);
+  --border-hover: var(--color-l30);
+  --border-active: var(--color-l10);
+
+  --text-primary: rgba(0, 0, 0, 1);
+  --text-secondary: rgba(0, 0, 0, 0.56);
+  --text-disabled: rgba(0, 0, 0, 0.32);
+
+  --btn-primary: var(--color-l60);
+  --btn-primary-hover: var(--color-l50);
+  --btn-primary-pressed: var(--color-l40);
+  --btn-secondary: transparent;
+  --btn-secondary-hover: var(--color-l90);
+  --btn-secondary-pressed: var(--color-l80);
+
+  color-scheme: light;
+}
+
+/* ───────────────────────────────────────────────
+   COMPOUND TYPOGRAPHY UTILITIES
+   Apply a full text style with a single class.
+   Use on any element: <span class="typo-h1">
+   ─────────────────────────────────────────────── */
+
+@utility typo-h1 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-h1);
+  line-height: var(--text-h1--line-height);
+  letter-spacing: 0;
+}
+
+@utility typo-h2 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-h2);
+  line-height: var(--text-h2--line-height);
+  letter-spacing: 0;
+}
+
+@utility typo-h3 {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  letter-spacing: 0.01em;
+}
+
+@utility typo-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  letter-spacing: 0.01em;
+}
+
+@utility typo-message {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-message);
+  line-height: var(--text-message--line-height);
+  letter-spacing: 0.01em;
+}
+
+/* ───────────────────────────────────────────────
+   BASE STYLES
+   ─────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+  font-synthesis: none;
+}
+
+@layer base {
+  h1,
+  h2 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    letter-spacing: 0;
+  }
+
+  h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: 0;
+  }
+
+  h3 {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    transition-property: color, background-color, border-color;
+    transition-duration: 150ms;
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.5);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  button[data-variant] {
+    border-radius: 0.5rem;
+  }
+
+  button[data-variant='primary'] {
+    background-color: var(--btn-primary);
+
+    &:hover:not(:disabled) {
+      background-color: var(--btn-primary-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--btn-primary-pressed);
+    }
+  }
+
+  button[data-variant='secondary'] {
+    &:hover:not(:disabled) {
+      background-color: var(--btn-secondary-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--btn-secondary-pressed);
+    }
+  }
+
+  [role='menuitem'] {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.75rem;
+    padding-inline: 0.625rem;
+    padding-block: 0.75rem;
+
+    &:hover {
+      background-color: var(--color-g70);
+    }
+
+    &:active {
+      background-color: var(--color-g60);
+    }
+
+    .light & {
+      &:hover {
+        background-color: var(--color-l70);
+      }
+
+      &:active {
+        background-color: var(--color-l60);
+      }
+    }
+  }
+
+  button[data-variant='special'] {
+    border-radius: 9999px;
+    border: 1px solid var(--color-g20);
+    background-color: var(--color-g100);
+    background-image: linear-gradient(
+      to bottom,
+      rgba(40, 40, 40, 0.7),
+      var(--color-g60)
+    );
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
+      background-image:
+        linear-gradient(
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.04)
+        ),
+        linear-gradient(to bottom, rgba(40, 40, 40, 0.7), var(--color-g60));
+    }
+
+    .light & {
+      border-color: var(--color-l60);
+      background-color: var(--color-l100);
+      background-image: linear-gradient(
+        to bottom,
+        var(--color-l100),
+        var(--color-l90)
+      );
+
+      &:hover:not(:disabled),
+      &:active:not(:disabled) {
+        background-image: linear-gradient(
+          to bottom,
+          var(--color-l90),
+          var(--color-l80)
+        );
+      }
+    }
+  }
+}
+
+[role='dialog'] {
+  width: 22.75rem; /* 364px */
+  max-width: calc(100vw - 2rem);
+  border-radius: 0.5rem;
+  background: var(--surface-card);
+  padding: 1.5rem;
+}
+
+input:where(
+  :not([type]),
+  [type='text'],
+  [type='email'],
+  [type='password'],
+  [type='tel'],
+  [type='url'],
+  [type='search'],
+  [type='number']
+) {
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  line-height: normal;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  padding-inline: 0.75rem;
+  background: var(--surface-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  transition-property: border-color, background-color;
+  transition-duration: 150ms;
+  outline: none;
+
+  &::placeholder {
+    color: var(--text-disabled);
+  }
+
+  &:hover:not(:disabled, :focus) {
+    border-color: var(--border-hover);
+  }
+
+  &:focus {
+    background: var(--surface-input-active);
+    border-color: var(--border-active);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--color-error);
+
+    &:hover,
+    &:focus {
+      border-color: var(--color-error);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+#root {
+  min-height: 100svh;
+}

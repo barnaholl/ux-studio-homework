@@ -1,0 +1,57 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      redis:
+        condition: service_healthy
+    env_file:
+      - path: ./backend/.env
+        required: false
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=file:/app/prisma/dev.db
+      - JWT_SECRET=docker-dev-secret-change-in-prod
+      - CORS_ORIGINS=http://localhost
+      # DigitalOcean Spaces — avatar storage
+      - DO_SPACES_REGION=fra1
+      - DO_SPACES_ENDPOINT=https://fra1.digitaloceanspaces.com
+      - DO_SPACES_BUCKET=uxstudio-homework
+      - DO_SPACES_KEY=DO801BDBHJU4C4Q3XDMT
+      - DO_SPACES_SECRET=bjn++sVOMyQswNAi7qDABsBLR63+7A7v7+FTr1W1xgU
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:3000/api/v1/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  redis-data:

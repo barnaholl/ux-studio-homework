@@ -1,0 +1,15 @@
+{
+  "name": "contacts-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run start:dev --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "build:backend": "npm run build --prefix backend",
+    "lint:frontend": "npm run lint --prefix frontend",
+    "lint:backend": "npm run lint --prefix backend",
+    "test:backend": "npm run test --prefix backend",
+    "test:backend:cov": "npm run test:cov --prefix backend"
+  }
+}
